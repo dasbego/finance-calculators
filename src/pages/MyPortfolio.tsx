@@ -5,10 +5,11 @@ import {
   Flex,
   FormControl,
   FormLabel,
-  Input,
+  IconButton,
   InputGroup,
   InputLeftAddon,
-  InputLeftElement,
+  NumberInput,
+  NumberInputField,
   Select,
   Table,
   Tbody,
@@ -20,37 +21,38 @@ import {
 } from "@chakra-ui/react";
 import {
   FaCalendarAlt,
-  FaCaretDown,
+  FaTrash,
   FaDollarSign,
   FaPercentage,
 } from "react-icons/fa";
+import { v4 as uuidv4 } from "uuid";
 
 interface Investment {
-  id: number;
+  id: string;
   initialCapital: number;
   annualRate: number;
   timeToInvest: number;
   frequency: string;
   additionalInvestment: number;
 }
+const DEFAULT_FORM_VALUES: Investment = {
+  id: "",
+  initialCapital: 0,
+  annualRate: 7,
+  timeToInvest: 1,
+  frequency: "yearly",
+  additionalInvestment: 0,
+};
 
 const MyPortfolio = () => {
   const [investments, setInvestments] = useState<Investment[]>([]);
-  const [formValues, setFormValues] = useState<Investment>({
-    id: 0,
-    initialCapital: 0,
-    annualRate: 0,
-    timeToInvest: 0,
-    frequency: "",
-    additionalInvestment: 0,
-  });
+  const [formValues, setFormValues] = useState<Investment>(DEFAULT_FORM_VALUES);
 
   const handleInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = e.target;
+    (name: keyof Investment, value: number) => {
       setFormValues((prevValues) => ({
         ...prevValues,
-        [name]: parseFloat(value), // Parse input value to number
+        [name]: parseFloat(value),
       }));
     },
     []
@@ -70,15 +72,11 @@ const MyPortfolio = () => {
   const handleAddInvestment = useCallback(() => {
     setInvestments((prevInvestments) => [
       ...prevInvestments,
-      { ...formValues, id: prevInvestments.length + 1 },
+      { ...formValues, id: uuidv4() },
     ]);
     setFormValues({
-      id: 0,
-      initialCapital: 0,
-      annualRate: 0,
-      timeToInvest: 0,
-      frequency: "",
-      additionalInvestment: 0,
+      ...DEFAULT_FORM_VALUES,
+      id: "",
     });
   }, [formValues]);
 
@@ -101,6 +99,18 @@ const MyPortfolio = () => {
     }
     return 1;
   };
+
+  const handleDeleteInvestment = useCallback(
+    (id: string) => {
+      debugger;
+      setInvestments(
+        investments.filter((investment) => {
+          return investment.id !== id;
+        })
+      );
+    },
+    [investments]
+  );
 
   const calculateTotalInvestment = useMemo(() => {
     const totalInvestment = investments.reduce(
@@ -189,13 +199,15 @@ const MyPortfolio = () => {
               fontSize="1.2em"
               children={<FaDollarSign />}
             />
-            <Input
-              placeholder="Inversión inicial"
+            <NumberInput
               name="initialCapital"
-              type="number"
-              onChange={handleInputChange}
               value={formValues.initialCapital}
-            />
+              onChange={(value) =>
+                handleInputChange("initialCapital", parseFloat(value) || 0)
+              }
+            >
+              <NumberInputField borderLeftRadius={0} />
+            </NumberInput>
           </InputGroup>
         </FormControl>
 
@@ -208,13 +220,15 @@ const MyPortfolio = () => {
               fontSize="1.2em"
               children={<FaPercentage />}
             />
-            <Input
-              placeholder="Tasa anual"
+            <NumberInput
               name="annualRate"
-              type="number"
-              onChange={handleInputChange}
               value={formValues.annualRate}
-            />
+              onChange={(value) =>
+                handleInputChange("annualRate", parseFloat(value) || 0)
+              }
+            >
+              <NumberInputField borderLeftRadius={0} />
+            </NumberInput>
           </InputGroup>
         </FormControl>
         <FormControl id="timeToInvest">
@@ -226,13 +240,16 @@ const MyPortfolio = () => {
               fontSize="1.2em"
               children={<FaCalendarAlt />}
             />
-            <Input
-              placeholder="Tiempo para invertir"
+            <NumberInput
+              min={1}
               name="timeToInvest"
-              type="number"
-              onChange={handleInputChange}
               value={formValues.timeToInvest}
-            />
+              onChange={(value) =>
+                handleInputChange("timeToInvest", parseFloat(value) || 0)
+              }
+            >
+              <NumberInputField borderLeftRadius={0} />
+            </NumberInput>
           </InputGroup>
         </FormControl>
 
@@ -250,6 +267,7 @@ const MyPortfolio = () => {
               value={formValues.frequency}
               onChange={handleSelectChange}
               borderLeftRadius={0}
+              defaultValue="yearly"
             >
               <option value="daily">Diario</option>
               <option value="weekly">Semanal</option>
@@ -267,12 +285,18 @@ const MyPortfolio = () => {
               fontSize="1.2em"
               children={<FaDollarSign />}
             />
-            <Input
-              type="number"
+            <NumberInput
               name="additionalInvestment"
-              onChange={handleInputChange}
               value={formValues.additionalInvestment}
-            />
+              onChange={(value) =>
+                handleInputChange(
+                  "additionalInvestment",
+                  parseFloat(value) || 0
+                )
+              }
+            >
+              <NumberInputField borderLeftRadius={0} />
+            </NumberInput>
           </InputGroup>
         </FormControl>
         <Button mb={4} onClick={handleAddInvestment}>
@@ -323,6 +347,14 @@ const MyPortfolio = () => {
                   <Td>{frequency}</Td>
                   <Td>{formatCurrency(totalAdditionalInvestment)}</Td>
                   <Td>{formatCurrency(totalInvestment)}</Td>
+                  <Td>
+                    <IconButton
+                      aria-label="Delete investment"
+                      icon={<FaTrash />}
+                      colorScheme="red"
+                      onClick={() => handleDeleteInvestment(id)}
+                    />
+                  </Td>
                 </Tr>
               );
             })}
