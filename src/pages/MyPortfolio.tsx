@@ -6,6 +6,9 @@ import {
   FormControl,
   FormLabel,
   Input,
+  InputGroup,
+  InputLeftAddon,
+  InputLeftElement,
   Select,
   Table,
   Tbody,
@@ -15,6 +18,12 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
+import {
+  FaCalendarAlt,
+  FaCaretDown,
+  FaDollarSign,
+  FaPercentage,
+} from "react-icons/fa";
 
 interface Investment {
   id: number;
@@ -171,118 +180,164 @@ const MyPortfolio = () => {
   return (
     <Box p={4}>
       <Flex flexDir="column">
-        <FormControl mb={4}>
-          <FormLabel>Initial Capital</FormLabel>
-          <Input
-            type="number"
-            name="initialCapital"
-            value={formValues.initialCapital}
-            onChange={handleInputChange}
-          />
+        <FormControl id="initialCapital">
+          <FormLabel>Inversión inicial</FormLabel>
+          <InputGroup>
+            <InputLeftAddon
+              pointerEvents="none"
+              color="gray.300"
+              fontSize="1.2em"
+              children={<FaDollarSign />}
+            />
+            <Input
+              placeholder="Inversión inicial"
+              name="initialCapital"
+              type="number"
+              onChange={handleInputChange}
+              value={formValues.initialCapital}
+            />
+          </InputGroup>
         </FormControl>
-        <FormControl mb={4}>
-          <FormLabel>Annual Rate</FormLabel>
-          <Input
-            type="number"
-            name="annualRate"
-            value={formValues.annualRate}
-            onChange={handleInputChange}
-          />
+
+        <FormControl id="annualRate">
+          <FormLabel>Tasa anual</FormLabel>
+          <InputGroup>
+            <InputLeftAddon
+              pointerEvents="none"
+              color="gray.300"
+              fontSize="1.2em"
+              children={<FaPercentage />}
+            />
+            <Input
+              placeholder="Tasa anual"
+              name="annualRate"
+              type="number"
+              onChange={handleInputChange}
+              value={formValues.annualRate}
+            />
+          </InputGroup>
         </FormControl>
-        <FormControl mb={4}>
-          <FormLabel>Time to Invest (years)</FormLabel>
-          <Input
-            type="number"
-            name="timeToInvest"
-            value={formValues.timeToInvest}
-            onChange={handleInputChange}
-          />
+        <FormControl id="timeToInvest">
+          <FormLabel>Tiempo para invertir (años)</FormLabel>
+          <InputGroup>
+            <InputLeftAddon
+              pointerEvents="none"
+              color="gray.300"
+              fontSize="1.2em"
+              children={<FaCalendarAlt />}
+            />
+            <Input
+              placeholder="Tiempo para invertir"
+              name="timeToInvest"
+              type="number"
+              onChange={handleInputChange}
+              value={formValues.timeToInvest}
+            />
+          </InputGroup>
         </FormControl>
-        <FormControl mb={4}>
-          <FormLabel>Frequency</FormLabel>
-          <Select
-            name="frequency"
-            value={formValues.frequency}
-            onChange={handleSelectChange}
-          >
-            <option value="daily">Daily</option>
-            <option value="weekly">Weekly</option>
-            <option value="monthly">Monthly</option>
-            <option value="yearly">Yearly</option>
-          </Select>
+
+        <FormControl mb={4} id="frequency">
+          <FormLabel>Frecuencia</FormLabel>
+          <InputGroup>
+            <InputLeftAddon
+              pointerEvents="none"
+              color="gray.300"
+              fontSize="1.2em"
+              children={<FaCalendarAlt />}
+            />
+            <Select
+              name="frequency"
+              value={formValues.frequency}
+              onChange={handleSelectChange}
+              borderLeftRadius={0}
+            >
+              <option value="daily">Diario</option>
+              <option value="weekly">Semanal</option>
+              <option value="monthly">Mensual</option>
+              <option value="yearly">Anual</option>
+            </Select>
+          </InputGroup>
         </FormControl>
-        <FormControl mb={4}>
-          <FormLabel>Additional Investment</FormLabel>
-          <Input
-            type="number"
-            name="additionalInvestment"
-            onChange={handleInputChange}
-            value={formValues.additionalInvestment}
-          />
+        <FormControl mb={4} id="additionalInvestments">
+          <FormLabel>Inversión Adicional</FormLabel>
+          <InputGroup>
+            <InputLeftAddon
+              pointerEvents="none"
+              color="gray.300"
+              fontSize="1.2em"
+              children={<FaDollarSign />}
+            />
+            <Input
+              type="number"
+              name="additionalInvestment"
+              onChange={handleInputChange}
+              value={formValues.additionalInvestment}
+            />
+          </InputGroup>
         </FormControl>
         <Button mb={4} onClick={handleAddInvestment}>
-          Add Investment
+          Agregar Inversión
         </Button>
       </Flex>
       {investments.length > 0 && (
         <Table variant="simple">
           <Thead>
             <Tr>
-              <Th>Investment ID</Th>
-              <Th>Initial Capital</Th>
-              <Th>Annual Rate</Th>
-              <Th>Time to Invest (years)</Th>
-              <Th>Frequency</Th>
-              <Th>Additional Investment</Th>
-              <Th>Projected Value</Th>
+              <Th>ID de Inversión</Th>
+              <Th>Capital Inicial</Th>
+              <Th>Tasa Anual</Th>
+              <Th>Tiempo de Inversión (años)</Th>
+              <Th>Frecuencia</Th>
+              <Th>Inversión Adicional Total</Th>
+              <Th>Valor Proyectado</Th>
             </Tr>
           </Thead>
           <Tbody>
-            {investments.map((investment) => (
-              <Tr key={investment.id}>
-                <Td>{investment.id}</Td>
-                <Td>{formatCurrency(investment.initialCapital)}</Td>
-                <Td>{investment.annualRate}%</Td>
-                <Td>{investment.timeToInvest}</Td>
-                <Td>{investment.frequency}</Td>
-                <Td>
-                  {formatCurrency(
-                    investment.additionalInvestment *
-                      investment.timeToInvest *
-                      getFrequencyMultiplier(investment.frequency)
-                  )}
-                </Td>
-                <Td>
-                  {formatCurrency(
-                    investment.initialCapital +
-                      investment.additionalInvestment *
-                        investment.timeToInvest *
-                        getFrequencyMultiplier(investment.frequency) +
-                      (investment.initialCapital +
-                        investment.additionalInvestment *
-                          investment.timeToInvest *
-                          getFrequencyMultiplier(investment.frequency)) *
-                        Math.pow(
-                          1 + investment.annualRate / 100,
-                          investment.timeToInvest
-                        )
-                  )}
-                </Td>{" "}
-                {/* New column */}
-              </Tr>
-            ))}
+            {investments.map((investment) => {
+              const {
+                id,
+                initialCapital,
+                annualRate,
+                timeToInvest,
+                frequency,
+                additionalInvestment,
+              } = investment;
+
+              const frequencyMultiplier = getFrequencyMultiplier(frequency);
+              const totalAdditionalInvestment =
+                additionalInvestment * timeToInvest * frequencyMultiplier;
+              const compoundInterestInitialCapital =
+                initialCapital * Math.pow(1 + annualRate / 100, timeToInvest);
+              const compoundInterestAdditional =
+                totalAdditionalInvestment *
+                Math.pow(1 + annualRate / 100, timeToInvest);
+              const totalInvestment =
+                compoundInterestInitialCapital + compoundInterestAdditional;
+
+              return (
+                <Tr key={id}>
+                  <Td>{id}</Td>
+                  <Td>{formatCurrency(initialCapital)}</Td>
+                  <Td>{annualRate}%</Td>
+                  <Td>{timeToInvest}</Td>
+                  <Td>{frequency}</Td>
+                  <Td>{formatCurrency(totalAdditionalInvestment)}</Td>
+                  <Td>{formatCurrency(totalInvestment)}</Td>
+                </Tr>
+              );
+            })}
           </Tbody>
         </Table>
       )}
       {investments.length > 0 && (
         <>
-          <Text>Total Investment: {calculateTotalInvestment}</Text>
-          <Text>Total Projected: {calculateTotalProjected}</Text>
-          <Text>Total Rate: {calculateTotalRate}</Text>
+          <Text>Inversión Total: {calculateTotalInvestment}</Text>
+          <Text>Proyección Total: {calculateTotalProjected}</Text>
+          <Text>Tasa Total: {calculateTotalRate}</Text>
           <Text>
-            Total Additional Investment: {calculateTotalAdditionalInvestment}
+            Inversión Adicional Total: {calculateTotalAdditionalInvestment}
           </Text>
-          <Text>Real Total Rate: {calculateRealTotalRate}</Text>
+          <Text>Tasa Total Real: {calculateRealTotalRate}</Text>
         </>
       )}
     </Box>
