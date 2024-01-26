@@ -1,27 +1,19 @@
-import { Flex } from "@chakra-ui/react";
-import Header from "./components/Header";
-import Sidebar from "./components/Sidebar";
-import Footer from "./components/Footer";
-import { ChakraProvider, Box } from "@chakra-ui/react";
-import {
-  createBrowserRouter,
-  Route,
-  RouterProvider,
-  Routes,
-} from "react-router-dom";
+import { Flex, Box } from "@chakra-ui/react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
 import CompoundInterestCalculator from "./components/CompounInterestCalculator";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
+import Sidebar from "./components/Sidebar";
 import MyPortfolio from "./pages/MyPortfolio";
 
-const router = createBrowserRouter([{ path: "*", Component: Root }]);
-
-function Layout({ children }) {
+function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <Flex direction="column" minHeight="100dvh" width="100vw">
+    <Flex direction="column" minHeight="100vh" width="100vw">
       <Header />
       <Flex
         flex="1" // Flex grow to take available space
-        width={{ base: "full", md: "auto" }} // Full width on small screens, auto on medium screens and up>
+        width={{ base: "full", md: "auto" }} // Full width on small screens, auto on medium screens and up
       >
         <Sidebar />
         <Box
@@ -40,18 +32,14 @@ function Layout({ children }) {
 }
 
 export default function App() {
-  return <RouterProvider router={router} />;
-}
-
-function Root() {
   return (
-    <ChakraProvider>
+    <Router>
       <Layout>
         <Routes>
           <Route path="/" element={<CompoundInterestCalculator />} />
           <Route path="/myportfolio" element={<MyPortfolio />} />
         </Routes>
       </Layout>
-    </ChakraProvider>
+    </Router>
   );
 }
