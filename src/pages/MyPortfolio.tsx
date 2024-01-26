@@ -121,6 +121,7 @@ const FormComponent: React.FC<FormComponentProps> = ({
               onChange={(value) =>
                 handleInputChange("annualRate", parseFloat(value) || 0)
               }
+              width="100%"
             >
               <NumberInputField borderLeftRadius={0} />
             </NumberInput>
@@ -162,6 +163,7 @@ const FormComponent: React.FC<FormComponentProps> = ({
               value={formValues.frequency}
               onChange={handleSelectChange}
               borderLeftRadius={0}
+              width="100%"
             >
               <option value="daily">Diario</option>
               <option value="weekly">Semanal</option>
@@ -288,7 +290,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
   }, [investments]);
 
   return (
-    <>
+    <Box overflowX="auto">
       <Table variant="simple">
         <Thead>
           <Tr>
@@ -361,7 +363,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
         Inversión Adicional Total: {calculateTotalAdditionalInvestment}
       </Text>
       <Text>Tasa Total Real: {calculateRealTotalRate}</Text>
-    </>
+    </Box>
   );
 };
 
