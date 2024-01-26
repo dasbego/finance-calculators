@@ -25,8 +25,9 @@ import {
   FaCalendarAlt,
 } from "react-icons/fa"; // Added new icons
 import ResultCard from "./ResultCard";
+import DataGraph from "./DataGraph";
 
-interface InvestmentGrowthData {
+export interface InvestmentGrowthData {
   year: number;
   initDeposit: number;
   accumulatedDeposits: number;
@@ -190,6 +191,9 @@ const CompoundInterestCalculator = () => {
           </FormControl>
         </VStack>
         <VStack width="70%">
+          <Flex justifyContent="center" alignItems="center" width="100%">
+            <DataGraph growthData={investmentGrowth} />
+          </Flex>
           <Flex justifyContent="space-between" maxWidth={980} width="100%">
             <ResultCard
               label="Inversión inicial"
