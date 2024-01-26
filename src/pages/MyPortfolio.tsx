@@ -19,6 +19,7 @@ import {
   IconButton,
   Text,
   Grid,
+  Heading,
 } from "@chakra-ui/react";
 import {
   FaDollarSign,
@@ -218,80 +219,19 @@ const TableComponent: React.FC<TableComponentProps> = ({
   handleDeleteInvestment,
   formatCurrency,
 }) => {
-  const calculateTotalInvestment = useMemo(() => {
-    const totalInvestment = investments.reduce(
-      (total, investment) =>
-        total + investment.initialCapital + investment.additionalInvestment,
-      0
-    );
-    return formatCurrency(totalInvestment);
-  }, [investments]);
+  // Calculate total investment
+  const totalInvestment = investments.reduce((total, investment) => {
+    return total + investment.initialCapital + investment.additionalInvestment;
+  }, 0);
 
-  const calculateTotalProjected = useMemo(() => {
-    const totalProjected = investments.reduce((total, investment) => {
-      const frequencyMultiplier = getFrequencyMultiplier(investment.frequency);
-      const additionalInvestment =
-        investment.additionalInvestment *
-        frequencyMultiplier *
-        investment.timeToInvest;
-      const projectedValue =
-        investment.initialCapital +
-        additionalInvestment +
-        (investment.initialCapital + additionalInvestment) *
-          Math.pow(1 + investment.annualRate / 100, investment.timeToInvest);
-      return total + projectedValue;
-    }, 0);
-    return formatCurrency(totalProjected);
-  }, [investments]);
+  // Calculate total return
+  const totalReturn = investments.reduce((total, investment) => {
+    const interest = investment.initialCapital * (investment.annualRate / 100);
+    return total + interest;
+  }, 0);
 
-  const calculateTotalRate = useMemo(() => {
-    const totalRate = investments.reduce(
-      (total, investment) => total + investment.annualRate,
-      0
-    );
-    return totalRate.toFixed(2) + "%";
-  }, [investments]);
-
-  const calculateTotalAdditionalInvestment = useMemo(() => {
-    const totalAdditionalInvestment = investments.reduce(
-      (total, investment) => {
-        const frequencyMultiplier = getFrequencyMultiplier(
-          investment.frequency
-        );
-        const additionalInvestment =
-          investment.additionalInvestment *
-          frequencyMultiplier *
-          investment.timeToInvest;
-        return total + additionalInvestment;
-      },
-      0
-    );
-    return formatCurrency(totalAdditionalInvestment);
-  }, [investments]);
-
-  const calculateRealTotalRate = useMemo(() => {
-    const totalInvestment = investments.reduce(
-      (total, investment) =>
-        total + investment.initialCapital + investment.additionalInvestment,
-      0
-    );
-    const totalProjected = investments.reduce((total, investment) => {
-      const frequencyMultiplier = getFrequencyMultiplier(investment.frequency);
-      const additionalInvestment =
-        investment.additionalInvestment *
-        frequencyMultiplier *
-        investment.timeToInvest;
-      const projectedValue =
-        investment.initialCapital +
-        additionalInvestment +
-        (investment.initialCapital + additionalInvestment) *
-          Math.pow(1 + investment.annualRate / 100, investment.timeToInvest);
-      return total + projectedValue;
-    }, 0);
-    const totalInterest = totalProjected - totalInvestment;
-    const realTotalRate = (totalInterest / totalInvestment) * 100;
-    return realTotalRate.toFixed(2) + "%";
-  }, [investments]);
+  // Calculate total profit
+  const totalProfit = totalReturn + totalInvestment;
 
   return (
     <Box overflowX="auto">
@@ -304,6 +244,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
             <Th>Tiempo de Inversión (años)</Th>
             <Th>Frecuencia</Th>
             <Th>Inversión Adicional Total</Th>
+            <Th>Interés total generado</Th>
             <Th>Valor Proyectado</Th>
           </Tr>
         </Thead>
@@ -317,26 +258,26 @@ const TableComponent: React.FC<TableComponentProps> = ({
               frequency,
               additionalInvestment,
             } = investment;
-
             // Calculate the frequency multiplier
             const frequencyMultiplier = getFrequencyMultiplier(frequency);
 
-            // Calculate the total additional investment
-            const totalAdditionalInvestment =
-              additionalInvestment * timeToInvest * frequencyMultiplier;
+            // Adjusted rate
+            const adjustedRate = annualRate / (100 * frequencyMultiplier);
 
-            // Calculate the compound interest on the initial capital
-            const compoundInterestInitialCapital =
-              initialCapital * Math.pow(1 + annualRate / 100, timeToInvest);
+            let amount = initialCapital;
+            let accumulatedDeposits = 0;
+            let accumulatedInterest = 0;
 
-            // Calculate the compound interest on the additional investment
-            const compoundInterestAdditional =
-              totalAdditionalInvestment *
-              Math.pow(1 + annualRate / 100, timeToInvest);
+            for (let i = 0; i < timeToInvest * frequencyMultiplier; i++) {
+              const interest = amount * adjustedRate;
+              accumulatedInterest += interest;
+              amount += interest;
 
-            // Calculate the total investment
-            const totalInvestment =
-              compoundInterestInitialCapital + compoundInterestAdditional;
+              accumulatedDeposits += additionalInvestment;
+              amount += additionalInvestment;
+            }
+
+            const totalInvestment = parseFloat(amount.toFixed(2));
 
             return (
               <Tr key={id}>
@@ -345,28 +286,28 @@ const TableComponent: React.FC<TableComponentProps> = ({
                 <Td>{annualRate}%</Td>
                 <Td>{timeToInvest}</Td>
                 <Td>{frequency}</Td>
-                <Td>{formatCurrency(totalAdditionalInvestment)}</Td>
+                <Td>{formatCurrency(accumulatedDeposits)}</Td>
+                <Td>{formatCurrency(accumulatedInterest)}</Td>
                 <Td>{formatCurrency(totalInvestment)}</Td>
-                <Td>
-                  <IconButton
-                    aria-label="Delete investment"
-                    icon={<FaTrash />}
-                    colorScheme="red"
-                    onClick={() => handleDeleteInvestment(id)}
-                  />
-                </Td>
               </Tr>
             );
           })}
         </Tbody>
       </Table>
-      <Text>Inversión Total: {calculateTotalInvestment}</Text>
-      <Text>Proyección Total: {calculateTotalProjected}</Text>
-      <Text>Tasa Total: {calculateTotalRate}</Text>
-      <Text>
-        Inversión Adicional Total: {calculateTotalAdditionalInvestment}
-      </Text>
-      <Text>Tasa Total Real: {calculateRealTotalRate}</Text>
+      <Box p={4} bg="gray.100">
+        <Heading as="h2" size="lg">
+          Investment Totals
+        </Heading>
+        <Text fontSize="xl">
+          <b>Total Investment:</b> {formatCurrency(totalInvestment)}
+        </Text>
+        <Text fontSize="xl">
+          <b>Total Return:</b> {formatCurrency(totalReturn)}
+        </Text>
+        <Text fontSize="xl">
+          <b>Total Profit:</b> {formatCurrency(totalProfit)}
+        </Text>
+      </Box>
     </Box>
   );
 };
