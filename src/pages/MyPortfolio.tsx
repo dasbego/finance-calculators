@@ -343,16 +343,16 @@ const TableComponent: React.FC<TableComponentProps> = ({
       </Table>
       <Box p={4} bg="gray.100">
         <Heading as="h2" size="lg">
-          Investment Totals
+          Total
         </Heading>
         <Text fontSize="xl">
-          <b>Total Investment:</b> {formatCurrency(totalInvestment)}
+          <b>Inversion Total:</b> {formatCurrency(totalInvestment)}
         </Text>
         <Text fontSize="xl">
-          <b>Total Return:</b> {formatCurrency(totalReturn)}
+          <b>Total de intereses generados:</b> {formatCurrency(totalReturn)}
         </Text>
         <Text fontSize="xl">
-          <b>Total Profit:</b> {formatCurrency(totalProfit)}
+          <b>Total:</b> {formatCurrency(totalProfit)}
         </Text>
       </Box>
     </Box>
