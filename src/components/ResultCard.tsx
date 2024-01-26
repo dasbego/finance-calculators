@@ -6,16 +6,19 @@ interface CardComponentProps {
   label: string;
   value: string;
   icon: React.ElementType; // Updated prop type
+  width?: number | string;
 }
 
 const CardComponent: React.FC<CardComponentProps> = ({
   label,
   value,
   icon: Icon,
+  width = "200px",
 }) => {
   return (
     <Box
-      minWidth={200}
+      width={width} // Added width prop
+      maxWidth={200}
       justifyContent="center"
       alignItems="center"
       border="1px solid black" // BEGIN: Added border style
