@@ -20,6 +20,7 @@ import {
   Grid,
   Heading,
   IconButton,
+  Input,
 } from "@chakra-ui/react";
 import {
   FaDollarSign,
@@ -31,6 +32,7 @@ import { v4 as uuidv4 } from "uuid";
 
 interface Investment {
   id: string;
+  name: string;
   initialCapital: number;
   annualRate: number;
   timeToInvest: number;
@@ -40,6 +42,7 @@ interface Investment {
 
 const DEFAULT_FORM_VALUES: Investment = {
   id: "",
+  name: "Mi nueva inversion",
   initialCapital: 0,
   annualRate: 7.0,
   timeToInvest: 1,
@@ -85,6 +88,14 @@ const FormComponent: React.FC<FormComponentProps> = ({
         }}
         gap={1}
       >
+        <FormControl id="name">
+          <FormLabel>Nombre de la inversión</FormLabel>
+          <Input
+            name="name"
+            value={formValues.name}
+            onChange={(event) => handleInputChange("name", event.target.value)}
+          />
+        </FormControl>
         <FormControl id="initialCapital">
           <FormLabel>Inversión inicial</FormLabel>
           <InputGroup>
@@ -257,6 +268,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
       <Table variant="simple">
         <Thead>
           <Tr>
+            <Th>Nombre</Th>
             <Th>ID de Inversión</Th>
             <Th>Capital Inicial</Th>
             <Th>Tasa Anual</Th>
@@ -301,6 +313,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
 
             return (
               <Tr key={id}>
+                <Td>{investment.name}</Td>
                 <Td>{id}</Td>
                 <Td>{formatCurrency(initialCapital)}</Td>
                 <Td>{annualRate}%</Td>
@@ -360,11 +373,11 @@ const MyPortfolio = () => {
   }, [investments]);
 
   const handleInputChange = useCallback(
-    (name: keyof Investment, value: number) => {
+    (name: keyof Investment, value: number | string) => {
       setFormValues((prevValues) => ({
         ...prevValues,
         // @ts-ignore
-        [name]: parseFloat(value),
+        [name]: typeof value === "number" ? parseFloat(value) : value,
       }));
     },
     []
