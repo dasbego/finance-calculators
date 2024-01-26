@@ -21,6 +21,9 @@ import {
   Heading,
   IconButton,
   Input,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
 } from "@chakra-ui/react";
 import {
   FaDollarSign,
@@ -140,6 +143,10 @@ const FormComponent: React.FC<FormComponentProps> = ({
               width="100%"
             >
               <NumberInputField borderLeftRadius={0} />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
             </NumberInput>
           </InputGroup>
         </FormControl>
