@@ -9,6 +9,7 @@ function Sidebar() {
       <Stack spacing="3">
         {/* Add your navigation links here */}
         <Link>Calculadora de Interés Compuesto</Link>
+        <Link>Mi portafolio de inversiones</Link>
       </Stack>
     </Box>
   );
