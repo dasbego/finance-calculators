@@ -26,58 +26,58 @@ import {
 } from "react-icons/fa"; // Added new icons
 import ResultCard from "./ResultCard";
 
-const format = (val: string) => val.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+interface InvestmentGrowthData {
+  year: number;
+  initDeposit: number;
+  accumulatedDeposits: number;
+  accumulatedInterest: number;
+  total: number;
+}
+
+const FORMAT = (val: string) => val.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+const DEFAULT_RATE = 10;
+const DEFAULT_YEARS = 5;
+const DEFAULT_FREQUENCY = "annually";
 
 const CompoundInterestCalculator = () => {
   const [principal, setPrincipal] = useState<number>(0);
-  const [rate, setRate] = useState<number>(10); // Added default value of 10
-  const [years, setYears] = useState<number>(10); // Added default value of 10
-  const [result, setResult] = useState<string>("0");
+  const [rate, setRate] = useState<number>(DEFAULT_RATE);
+  const [years, setYears] = useState<number>(DEFAULT_YEARS);
   const [investmentGrowth, setInvestmentGrowth] = useState<
-    {
-      year: number;
-      initDeposit: number;
-      accumulatedDeposits: number;
-      accumulatedInterest: number;
-      total: number;
-    }[]
+    InvestmentGrowthData[]
   >([]);
-  const [frequency, setFrequency] = useState<string>("annually"); // Changed frequency state to string
+  const [frequency, setFrequency] = useState<string>(DEFAULT_FREQUENCY);
   const [additionals, setAdditionals] = useState<number>(0);
 
   const calculateCompoundInterest = () => {
-    const growthData: {
-      year: number;
-      initDeposit: number;
-      accumulatedDeposits: number;
-      accumulatedInterest: number;
-      total: number;
-    }[] = [];
+    setInvestmentGrowth([]);
+    const growthData: InvestmentGrowthData[] = [];
     let amount = principal;
     let accumulatedDeposits = 0;
     let accumulatedInterest = 0;
-    for (let i = 0; i < years; i++) {
-      const year = i + 1;
-      const interest = amount * (rate / 100);
-      accumulatedInterest += interest; // Updated accumulatedInterest
+    const periodMultiplier = getFrequencyMultiplier(frequency);
+    const adjustedRate = rate / (100 * periodMultiplier);
+
+    for (let i = 0; i < years * periodMultiplier; i++) {
+      const interest = amount * adjustedRate;
+      accumulatedInterest += interest;
       amount += interest;
-      accumulatedDeposits += additionals; // Updated accumulatedDeposits
-      amount += accumulatedDeposits * getFrequencyMultiplier(frequency); // Adjusted calculation based on frequency
+
+      accumulatedDeposits += additionals;
+      amount += additionals;
+
       const total = parseInt(amount.toFixed(2));
-      growthData.push({
-        year,
-        initDeposit: principal,
-        accumulatedDeposits,
-        accumulatedInterest,
-        total,
-      });
+      if ((i + 1) % periodMultiplier === 0) {
+        growthData.push({
+          year: i + 1,
+          initDeposit: principal,
+          accumulatedDeposits: parseFloat(accumulatedDeposits.toFixed(2)),
+          accumulatedInterest: parseFloat(accumulatedInterest.toFixed(2)),
+          total: parseFloat(total.toFixed(2)),
+        });
+      }
     }
     setInvestmentGrowth(growthData);
-    const formattedResult = new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(amount);
-    setResult(formattedResult);
   };
 
   useEffect(() => {
@@ -86,14 +86,9 @@ const CompoundInterestCalculator = () => {
 
   const getFrequencyMultiplier = (frequency: string) => {
     switch (frequency) {
-      case "annually":
-        return 1;
       case "monthly":
         return 12;
-      case "weekly":
-        return 52;
-      case "daily":
-        return 365;
+      case DEFAULT_FREQUENCY:
       default:
         return 1;
     }
@@ -115,7 +110,7 @@ const CompoundInterestCalculator = () => {
               <NumberInput
                 min={0}
                 onChange={(valueString) => setPrincipal(parseInt(valueString))}
-                value={format(principal.toString())}
+                value={FORMAT(principal.toString())}
                 onFocus={(e) => e.target.select()}
                 w="100%"
               >
@@ -165,10 +160,8 @@ const CompoundInterestCalculator = () => {
                 onChange={(e) => setFrequency(e.target.value)}
                 borderLeftRadius={0}
               >
-                <option value="annually">Anualmente</option>
+                <option value={DEFAULT_FREQUENCY}>Anualmente</option>
                 <option value="monthly">Mensualmente</option>
-                <option value="weekly">Semanalmente</option>
-                <option value="daily">Diariamente</option>
               </Select>
             </InputGroup>
           </FormControl>
@@ -196,40 +189,39 @@ const CompoundInterestCalculator = () => {
             </InputGroup>
           </FormControl>
         </VStack>
-        {/* Removed Calculate button */}
         <VStack width="70%">
           <Flex justifyContent="space-between" maxWidth={980} width="100%">
             <ResultCard
               label="Inversión inicial"
-              value={format(principal.toString())}
+              value={FORMAT(principal.toString())}
               icon={FaDollarSign}
             />
             <ResultCard
               label="Depósitos adicionales"
-              value={format(
+              value={FORMAT(
                 investmentGrowth[
                   investmentGrowth.length - 1
                 ]?.accumulatedDeposits?.toString() || "0"
               )}
-              icon={FaMoneyBillWave} // Updated icon
+              icon={FaMoneyBillWave}
             />
             <ResultCard
               label="Interés acumulado"
-              value={format(
+              value={FORMAT(
                 investmentGrowth[
                   investmentGrowth.length - 1
                 ]?.accumulatedInterest?.toString() || "0"
               )}
-              icon={FaChartLine} // Updated icon
+              icon={FaChartLine}
             />
             <ResultCard
               label="Total"
-              value={format(
+              value={FORMAT(
                 investmentGrowth[
                   investmentGrowth.length - 1
                 ]?.total?.toString() || "0"
               )}
-              icon={FaCoins} // Updated icon
+              icon={FaCoins}
             />
           </Flex>
           <Flex overflowX="auto">
@@ -247,10 +239,14 @@ const CompoundInterestCalculator = () => {
                 {investmentGrowth.map((data) => (
                   <Tr key={data.year}>
                     <Td>{data.year}</Td>
-                    <Td>${format(data.initDeposit.toString())}</Td>
-                    <Td>${format(data.accumulatedDeposits.toString())}</Td>
-                    <Td>${format(data.accumulatedInterest.toString())}</Td>
-                    <Td>${format(data.total.toString())}</Td>
+                    <Td>${FORMAT(data.initDeposit.toString())}</Td>
+                    <Td>
+                      ${FORMAT(data.accumulatedDeposits.toFixed(2).toString())}
+                    </Td>
+                    <Td>
+                      ${FORMAT(data.accumulatedInterest.toFixed(2).toString())}
+                    </Td>
+                    <Td>${FORMAT(data.total.toFixed(2).toString())}</Td>
                   </Tr>
                 ))}
               </Tbody>
