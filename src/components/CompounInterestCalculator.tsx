@@ -70,7 +70,7 @@ const CompoundInterestCalculator = () => {
       const total = parseInt(amount.toFixed(2));
       if ((i + 1) % periodMultiplier === 0) {
         growthData.push({
-          year: i + 1,
+          year: (i + 1) / getFrequencyMultiplier(frequency),
           initDeposit: principal,
           accumulatedDeposits: parseFloat(accumulatedDeposits.toFixed(2)),
           accumulatedInterest: parseFloat(accumulatedInterest.toFixed(2)),
