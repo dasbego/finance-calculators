@@ -14,23 +14,11 @@ function Sidebar() {
   // @ts-ignore
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  /*const isMobile = useBreakpointValue({ base: true, md: false });
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
   if (isMobile) {
-    return (
-      <Box as="aside" p="4" bg="gray.100" id="sidebar">
-        <IconButton
-          aria-label="Open menu"
-          icon={<AiOutlineMenu />}
-          onClick={onOpen}
-          size="md"
-          alignSelf="flex-end"
-          mr="4"
-          mt="4"
-        />
-      </Box>
-    );
-  }*/
+    return null;
+  }
 
   return (
     <Box as="aside" w="250px" p="4" bg="gray.100" id="sidebar">

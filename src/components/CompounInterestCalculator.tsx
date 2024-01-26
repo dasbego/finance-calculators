@@ -16,6 +16,7 @@ import {
   Flex,
   InputGroup,
   InputLeftAddon,
+  Grid,
 } from "@chakra-ui/react";
 import {
   FaDollarSign,
@@ -97,8 +98,8 @@ const CompoundInterestCalculator = () => {
 
   return (
     <Box p={4} borderWidth="1px" borderRadius="lg" overflow="hidden">
-      <Flex>
-        <VStack spacing={4} width="30%">
+      <Grid templateColumns={{ base: "1fr", xl: "1fr 1fr" }} gap={6}>
+        <VStack spacing={4}>
           <FormControl id="principal">
             <FormLabel>Inversión inicial</FormLabel>
             <InputGroup>
@@ -190,7 +191,7 @@ const CompoundInterestCalculator = () => {
             </InputGroup>
           </FormControl>
         </VStack>
-        <VStack width="70%">
+        <Box>
           <Flex justifyContent="center" alignItems="center" width="100%">
             <DataGraph growthData={investmentGrowth} />
           </Flex>
@@ -256,8 +257,8 @@ const CompoundInterestCalculator = () => {
               </Tbody>
             </Table>
           </Flex>
-        </VStack>
-      </Flex>
+        </Box>
+      </Grid>
     </Box>
   );
 };
