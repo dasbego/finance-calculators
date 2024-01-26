@@ -14,8 +14,16 @@ import {
   Tr,
   Th,
   Td,
-  Select, // Added Select component
+  Select,
+  Flex, // Added Select component
 } from "@chakra-ui/react";
+import {
+  FaDollarSign,
+  FaMoneyBillWave,
+  FaChartLine,
+  FaCoins,
+} from "react-icons/fa"; // Added new icons
+import ResultCard from "./ResultCard";
 
 const format = (val: string) => val.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
@@ -141,19 +149,48 @@ const CompoundInterestCalculator = () => {
           <NumberInput
             min={0}
             onChange={(valueString) => setAdditionals(parseFloat(valueString))}
-            placeholder="Aportes adicionales" // Added placeholder
           >
             <NumberInputField placeholder="Aportes adicionales" />
           </NumberInput>
         </FormControl>
         {/* Removed Calculate button */}
         {result && (
-          <>
-            <Text fontSize="xl">
-              Inversión inicial: {format(principal.toString())}
-            </Text>
-            <Text fontSize="xl">Valor futuro: {result}</Text>
-            <Box overflowX="auto">
+          <VStack width="100%">
+            <Flex justifyContent="space-between" maxWidth={980} width="100%">
+              <ResultCard
+                label="Inversión inicial"
+                value={format(principal.toString())}
+                icon={FaDollarSign}
+              />
+              <ResultCard
+                label="Depósitos adicionales"
+                value={format(
+                  investmentGrowth[
+                    investmentGrowth.length - 1
+                  ]?.accumulatedDeposits?.toString() || "0"
+                )}
+                icon={FaMoneyBillWave} // Updated icon
+              />
+              <ResultCard
+                label="Interés acumulado"
+                value={format(
+                  investmentGrowth[
+                    investmentGrowth.length - 1
+                  ]?.accumulatedInterest?.toString() || "0"
+                )}
+                icon={FaChartLine} // Updated icon
+              />
+              <ResultCard
+                label="Total"
+                value={format(
+                  investmentGrowth[
+                    investmentGrowth.length - 1
+                  ]?.total?.toString() || "0"
+                )}
+                icon={FaCoins} // Updated icon
+              />
+            </Flex>
+            <Flex overflowX="auto">
               <Table variant="simple">
                 <Thead>
                   <Tr>
@@ -176,8 +213,8 @@ const CompoundInterestCalculator = () => {
                   ))}
                 </Tbody>
               </Table>
-            </Box>
-          </>
+            </Flex>
+          </VStack>
         )}
       </VStack>
     </Box>
