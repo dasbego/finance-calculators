@@ -11,6 +11,7 @@ import { AiOutlineMenu } from "react-icons/ai";
 import "./Sidebar.css";
 
 function Sidebar() {
+  // @ts-ignore
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const isMobile = useBreakpointValue({ base: true, md: false });

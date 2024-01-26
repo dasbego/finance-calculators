@@ -1,6 +1,5 @@
 import React from "react";
 import { Box, Text } from "@chakra-ui/react";
-import { IconType } from "react-icons";
 
 interface CardComponentProps {
   label: string;

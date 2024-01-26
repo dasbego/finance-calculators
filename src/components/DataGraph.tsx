@@ -6,9 +6,6 @@ import {
   LinearScale,
   Title,
   Tooltip,
-  DatasetController,
-  DatasetChartOptions,
-  plugins,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { InvestmentGrowthData } from "./CompounInterestCalculator";
@@ -62,11 +59,16 @@ const Graph: React.FC<GraphProps> = ({ growthData }) => {
     plugins: {
       tooltip: {
         callbacks: {
-          title: function (tooltipItems) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          title: function (tooltipItems: any[]) {
             const tooltipItem = tooltipItems[0];
             return `Year ${growthData[tooltipItem.dataIndex].year}`;
           },
-          label: function (tooltipItems) {
+          label: function (tooltipItems: {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            dataset: any;
+            dataIndex: string | number;
+          }) {
             const dataset = tooltipItems.dataset;
             const currentValue = dataset.data[tooltipItems.dataIndex];
             return `${dataset.label}: ${formatCurrency(currentValue)}`;

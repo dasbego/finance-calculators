@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   Box,
   Flex,
@@ -16,10 +16,10 @@ import {
   Tr,
   Th,
   Td,
-  IconButton,
   Text,
   Grid,
   Heading,
+  IconButton,
 } from "@chakra-ui/react";
 import {
   FaDollarSign,
@@ -41,7 +41,7 @@ interface Investment {
 const DEFAULT_FORM_VALUES: Investment = {
   id: "",
   initialCapital: 0,
-  annualRate: 7,
+  annualRate: 7.0,
   timeToInvest: 1,
   frequency: "yearly",
   additionalInvestment: 0,
@@ -64,7 +64,7 @@ const getFrequencyMultiplier = (frequency: string) => {
 
 interface FormComponentProps {
   formValues: Investment;
-  handleInputChange: (name: keyof Investment, value: number) => void;
+  handleInputChange: (name: keyof Investment, value: number | string) => void;
   handleSelectChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   handleAddInvestment: () => void;
 }
@@ -119,9 +119,13 @@ const FormComponent: React.FC<FormComponentProps> = ({
             <NumberInput
               name="annualRate"
               value={formValues.annualRate}
-              onChange={(value) =>
-                handleInputChange("annualRate", parseFloat(value) || 0)
-              }
+              min={0.1}
+              precision={2}
+              step={0.1}
+              onChange={(value) => {
+                handleInputChange("annualRate", parseFloat(value) || 0);
+              }}
+              inputMode="decimal"
               width="100%"
             >
               <NumberInputField borderLeftRadius={0} />
@@ -261,6 +265,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
             <Th>Inversión Adicional Total</Th>
             <Th>Interés total generado</Th>
             <Th>Valor Proyectado</Th>
+            <Th>Eliminar</Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -304,6 +309,13 @@ const TableComponent: React.FC<TableComponentProps> = ({
                 <Td>{formatCurrency(accumulatedDeposits)}</Td>
                 <Td>{formatCurrency(accumulatedInterest)}</Td>
                 <Td>{formatCurrency(totalInvestment)}</Td>
+                <Td>
+                  <IconButton
+                    aria-label="Delete Investment"
+                    icon={<FaTrash />}
+                    onClick={() => handleDeleteInvestment(id)}
+                  />
+                </Td>
               </Tr>
             );
           })}
@@ -351,6 +363,7 @@ const MyPortfolio = () => {
     (name: keyof Investment, value: number) => {
       setFormValues((prevValues) => ({
         ...prevValues,
+        // @ts-ignore
         [name]: parseFloat(value),
       }));
     },
