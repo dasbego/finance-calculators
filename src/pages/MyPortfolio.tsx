@@ -221,13 +221,28 @@ const TableComponent: React.FC<TableComponentProps> = ({
 }) => {
   // Calculate total investment
   const totalInvestment = investments.reduce((total, investment) => {
-    return total + investment.initialCapital + investment.additionalInvestment;
+    const frequencyMultiplier = getFrequencyMultiplier(investment.frequency);
+    const totalAdditionalInvestment =
+      investment.additionalInvestment *
+      investment.timeToInvest *
+      frequencyMultiplier;
+    return total + investment.initialCapital + totalAdditionalInvestment;
   }, 0);
 
   // Calculate total return
   const totalReturn = investments.reduce((total, investment) => {
-    const interest = investment.initialCapital * (investment.annualRate / 100);
-    return total + interest;
+    const frequencyMultiplier = getFrequencyMultiplier(investment.frequency);
+    const adjustedRate = investment.annualRate / (100 * frequencyMultiplier);
+    let amount = investment.initialCapital;
+    let accumulatedInterest = 0;
+
+    for (let i = 0; i < investment.timeToInvest * frequencyMultiplier; i++) {
+      const interest = amount * adjustedRate;
+      accumulatedInterest += interest;
+      amount += interest + investment.additionalInvestment;
+    }
+
+    return total + accumulatedInterest;
   }, 0);
 
   // Calculate total profit
