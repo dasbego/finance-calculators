@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import {
   Box,
   Flex,
@@ -39,8 +39,8 @@ interface Investment {
 const DEFAULT_FORM_VALUES: Investment = {
   id: "",
   initialCapital: 0,
-  annualRate: 0,
-  timeToInvest: 0,
+  annualRate: 7,
+  timeToInvest: 1,
   frequency: "yearly",
   additionalInvestment: 0,
 };
@@ -298,14 +298,23 @@ const TableComponent: React.FC<TableComponentProps> = ({
               additionalInvestment,
             } = investment;
 
+            // Calculate the frequency multiplier
             const frequencyMultiplier = getFrequencyMultiplier(frequency);
+
+            // Calculate the total additional investment
             const totalAdditionalInvestment =
               additionalInvestment * timeToInvest * frequencyMultiplier;
+
+            // Calculate the compound interest on the initial capital
             const compoundInterestInitialCapital =
               initialCapital * Math.pow(1 + annualRate / 100, timeToInvest);
+
+            // Calculate the compound interest on the additional investment
             const compoundInterestAdditional =
               totalAdditionalInvestment *
               Math.pow(1 + annualRate / 100, timeToInvest);
+
+            // Calculate the total investment
             const totalInvestment =
               compoundInterestInitialCapital + compoundInterestAdditional;
 
@@ -343,8 +352,24 @@ const TableComponent: React.FC<TableComponentProps> = ({
 };
 
 const MyPortfolio = () => {
-  const [investments, setInvestments] = useState<Investment[]>([]);
+  const [investments, setInvestments] = useState<Investment[]>(() => {
+    const savedInvestments = localStorage.getItem("investments");
+    return savedInvestments ? JSON.parse(savedInvestments) : [];
+  });
   const [formValues, setFormValues] = useState<Investment>(DEFAULT_FORM_VALUES);
+
+  // Load investments from local storage when component mounts
+  useEffect(() => {
+    const savedInvestments = localStorage.getItem("investments");
+    if (savedInvestments) {
+      setInvestments(JSON.parse(savedInvestments));
+    }
+  }, []);
+
+  // Save investments to local storage whenever they change
+  useEffect(() => {
+    localStorage.setItem("investments", JSON.stringify(investments));
+  }, [investments]);
 
   const handleInputChange = useCallback(
     (name: keyof Investment, value: number) => {
