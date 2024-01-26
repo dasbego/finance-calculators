@@ -19,7 +19,6 @@ import {
   IconButton,
   Text,
   Grid,
-  GridItem,
 } from "@chakra-ui/react";
 import {
   FaDollarSign,
@@ -100,6 +99,7 @@ const FormComponent: React.FC<FormComponentProps> = ({
               onChange={(value) =>
                 handleInputChange("initialCapital", parseFloat(value) || 0)
               }
+              width="100%"
             >
               <NumberInputField borderLeftRadius={0} />
             </NumberInput>
@@ -143,6 +143,7 @@ const FormComponent: React.FC<FormComponentProps> = ({
               onChange={(value) =>
                 handleInputChange("timeToInvest", parseFloat(value) || 0)
               }
+              width="100%"
             >
               <NumberInputField borderLeftRadius={0} />
             </NumberInput>
@@ -190,15 +191,18 @@ const FormComponent: React.FC<FormComponentProps> = ({
                   parseFloat(value) || 0
                 )
               }
+              width="100%"
             >
               <NumberInputField borderLeftRadius={0} />
             </NumberInput>
           </InputGroup>
         </FormControl>
+        <Flex justifyContent="center" alignItems="center">
+          <Button onClick={handleAddInvestment} size="lg" colorScheme="green">
+            Agregar Inversión
+          </Button>
+        </Flex>
       </Grid>
-      <Button mb={4} onClick={handleAddInvestment}>
-        Agregar Inversión
-      </Button>
     </>
   );
 };
