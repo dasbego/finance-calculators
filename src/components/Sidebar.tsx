@@ -1,4 +1,5 @@
 import { Box, Link, Stack, Text } from "@chakra-ui/react";
+import { Link as RouterLink } from "react-router-dom";
 
 function Sidebar() {
   return (
@@ -8,8 +9,12 @@ function Sidebar() {
       </Text>
       <Stack spacing="3">
         {/* Add your navigation links here */}
-        <Link>Calculadora de Interés Compuesto</Link>
-        <Link>Mi portafolio de inversiones</Link>
+        <Link as={RouterLink} to="/">
+          Calculadora de Interés Compuesto
+        </Link>
+        <Link as={RouterLink} to="/myportfolio">
+          Mi portafolio de inversiones
+        </Link>
       </Stack>
     </Box>
   );
