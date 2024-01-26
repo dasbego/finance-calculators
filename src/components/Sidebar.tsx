@@ -14,7 +14,7 @@ function Sidebar() {
   // @ts-ignore
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const isMobile = useBreakpointValue({ base: true, md: false });
+  /*const isMobile = useBreakpointValue({ base: true, md: false });
 
   if (isMobile) {
     return (
@@ -30,7 +30,7 @@ function Sidebar() {
         />
       </Box>
     );
-  }
+  }*/
 
   return (
     <Box as="aside" w="250px" p="4" bg="gray.100" id="sidebar">
