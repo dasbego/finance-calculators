@@ -18,6 +18,8 @@ import {
   Td,
   IconButton,
   Text,
+  Grid,
+  GridItem,
 } from "@chakra-ui/react";
 import {
   FaDollarSign,
@@ -74,116 +76,128 @@ const FormComponent: React.FC<FormComponentProps> = ({
   handleAddInvestment,
 }) => {
   return (
-    <Flex flexDir="column">
-      <FormControl id="initialCapital">
-        <FormLabel>Inversión inicial</FormLabel>
-        <InputGroup>
-          <InputLeftAddon
-            pointerEvents="none"
-            color="gray.300"
-            fontSize="1.2em"
-            children={<FaDollarSign />}
-          />
-          <NumberInput
-            name="initialCapital"
-            value={formValues.initialCapital}
-            onChange={(value) =>
-              handleInputChange("initialCapital", parseFloat(value) || 0)
-            }
-          >
-            <NumberInputField borderLeftRadius={0} />
-          </NumberInput>
-        </InputGroup>
-      </FormControl>
+    <>
+      <Grid
+        templateColumns={{
+          base: "repeat(1, 1fr)",
+          md: "repeat(2, 1fr)",
+          lg: "repeat(3, 1fr)",
+        }}
+        gap={1}
+      >
+        <FormControl id="initialCapital">
+          <FormLabel>Inversión inicial</FormLabel>
+          <InputGroup>
+            <InputLeftAddon
+              pointerEvents="none"
+              color="gray.300"
+              fontSize="1.2em"
+              children={<FaDollarSign />}
+            />
+            <NumberInput
+              name="initialCapital"
+              value={formValues.initialCapital}
+              onChange={(value) =>
+                handleInputChange("initialCapital", parseFloat(value) || 0)
+              }
+            >
+              <NumberInputField borderLeftRadius={0} />
+            </NumberInput>
+          </InputGroup>
+        </FormControl>
 
-      <FormControl id="annualRate">
-        <FormLabel>Tasa anual</FormLabel>
-        <InputGroup>
-          <InputLeftAddon
-            pointerEvents="none"
-            color="gray.300"
-            fontSize="1.2em"
-            children={<FaPercentage />}
-          />
-          <NumberInput
-            name="annualRate"
-            value={formValues.annualRate}
-            onChange={(value) =>
-              handleInputChange("annualRate", parseFloat(value) || 0)
-            }
-          >
-            <NumberInputField borderLeftRadius={0} />
-          </NumberInput>
-        </InputGroup>
-      </FormControl>
-      <FormControl id="timeToInvest">
-        <FormLabel>Tiempo para invertir (años)</FormLabel>
-        <InputGroup>
-          <InputLeftAddon
-            pointerEvents="none"
-            color="gray.300"
-            fontSize="1.2em"
-            children={<FaCalendarAlt />}
-          />
-          <NumberInput
-            min={1}
-            name="timeToInvest"
-            value={formValues.timeToInvest}
-            onChange={(value) =>
-              handleInputChange("timeToInvest", parseFloat(value) || 0)
-            }
-          >
-            <NumberInputField borderLeftRadius={0} />
-          </NumberInput>
-        </InputGroup>
-      </FormControl>
+        <FormControl id="annualRate">
+          <FormLabel>Tasa anual</FormLabel>
+          <InputGroup>
+            <InputLeftAddon
+              pointerEvents="none"
+              color="gray.300"
+              fontSize="1.2em"
+              children={<FaPercentage />}
+            />
+            <NumberInput
+              name="annualRate"
+              value={formValues.annualRate}
+              onChange={(value) =>
+                handleInputChange("annualRate", parseFloat(value) || 0)
+              }
+            >
+              <NumberInputField borderLeftRadius={0} />
+            </NumberInput>
+          </InputGroup>
+        </FormControl>
+        <FormControl id="timeToInvest">
+          <FormLabel>Tiempo para invertir (años)</FormLabel>
+          <InputGroup>
+            <InputLeftAddon
+              pointerEvents="none"
+              color="gray.300"
+              fontSize="1.2em"
+              children={<FaCalendarAlt />}
+            />
+            <NumberInput
+              min={1}
+              name="timeToInvest"
+              value={formValues.timeToInvest}
+              onChange={(value) =>
+                handleInputChange("timeToInvest", parseFloat(value) || 0)
+              }
+            >
+              <NumberInputField borderLeftRadius={0} />
+            </NumberInput>
+          </InputGroup>
+        </FormControl>
 
-      <FormControl mb={4} id="frequency">
-        <FormLabel>Frecuencia</FormLabel>
-        <InputGroup>
-          <InputLeftAddon
-            pointerEvents="none"
-            color="gray.300"
-            fontSize="1.2em"
-            children={<FaCalendarAlt />}
-          />
-          <Select
-            name="frequency"
-            value={formValues.frequency}
-            onChange={handleSelectChange}
-            borderLeftRadius={0}
-          >
-            <option value="daily">Diario</option>
-            <option value="weekly">Semanal</option>
-            <option value="monthly">Mensual</option>
-            <option value="yearly">Anual</option>
-          </Select>
-        </InputGroup>
-      </FormControl>
-      <FormControl mb={4} id="additionalInvestments">
-        <FormLabel>Inversión Adicional</FormLabel>
-        <InputGroup>
-          <InputLeftAddon
-            pointerEvents="none"
-            color="gray.300"
-            fontSize="1.2em"
-            children={<FaDollarSign />}
-          />
-          <NumberInput
-            name="additionalInvestment"
-            value={formValues.additionalInvestment}
-            onChange={(value) =>
-              handleInputChange("additionalInvestment", parseFloat(value) || 0)
-            }
-          >
-            <NumberInputField borderLeftRadius={0} />
-          </NumberInput>
-        </InputGroup>
-      </FormControl>
+        <FormControl mb={4} id="frequency">
+          <FormLabel>Frecuencia</FormLabel>
+          <InputGroup>
+            <InputLeftAddon
+              pointerEvents="none"
+              color="gray.300"
+              fontSize="1.2em"
+              children={<FaCalendarAlt />}
+            />
+            <Select
+              name="frequency"
+              value={formValues.frequency}
+              onChange={handleSelectChange}
+              borderLeftRadius={0}
+            >
+              <option value="daily">Diario</option>
+              <option value="weekly">Semanal</option>
+              <option value="monthly">Mensual</option>
+              <option value="yearly">Anual</option>
+            </Select>
+          </InputGroup>
+        </FormControl>
+        <FormControl mb={4} id="additionalInvestments">
+          <FormLabel>Inversión Adicional</FormLabel>
+          <InputGroup>
+            <InputLeftAddon
+              pointerEvents="none"
+              color="gray.300"
+              fontSize="1.2em"
+              children={<FaDollarSign />}
+            />
+            <NumberInput
+              name="additionalInvestment"
+              value={formValues.additionalInvestment}
+              onChange={(value) =>
+                handleInputChange(
+                  "additionalInvestment",
+                  parseFloat(value) || 0
+                )
+              }
+            >
+              <NumberInputField borderLeftRadius={0} />
+            </NumberInput>
+          </InputGroup>
+        </FormControl>
+      </Grid>
       <Button mb={4} onClick={handleAddInvestment}>
         Agregar Inversión
       </Button>
-    </Flex>
+    </>
   );
 };
 
