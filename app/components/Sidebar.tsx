@@ -6,15 +6,18 @@ const Sidebar: React.FC = () => {
     <aside>
       <VStack alignItems="flex-start">
         <Box>
-          <Link fontWeight="bold" href="/simuladores">
+          <Link fontWeight="bold" href="/simulators">
             Simuladores de créditos
           </Link>
         </Box>
         <Box fontWeight="bold">
-          <Link>Mi portafolio de inversiones</Link>
+          <Link href="/portfolio">Mi portafolio de inversiones</Link>
         </Box>
         <Box fontWeight="bold">
-          <Link>Mis alarmas</Link>
+          <Link href="/alarms">Mis alarmas</Link>
+        </Box>
+        <Box fontWeight="bold">
+          <Link href="/calendar">Calendario de pagos</Link>
         </Box>
       </VStack>
     </aside>

@@ -1,5 +1,5 @@
 import React from "react";
-import CreditCardsCalendar from "@/app/components/CreditCardsCalendar";
+import CreditCardsCalendar from "../components/CreditCardsCalendar";
 
 const CreditCardsCalendarPage: React.FC = () => {
   return (
