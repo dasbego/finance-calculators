@@ -51,11 +51,7 @@ export default function RootLayout({
                 </Heading>
               </Flex>
             </GridItem>
-            <GridItem
-              rowSpan={3}
-              style={{ backgroundColor: "yellow" }}
-              padding={5}
-            >
+            <GridItem rowSpan={3} padding={5} bg="white" boxShadow="lg">
               <Sidebar />
             </GridItem>
             <GridItem colSpan={1} rowSpan={1}>
