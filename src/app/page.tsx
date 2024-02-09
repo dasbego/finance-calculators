@@ -1,4 +1,3 @@
-import styles from "./page.module.css";
 import CompountInterestCalculator from "@/components/CompoundInterestCalculator";
 import { Box } from "@chakra-ui/react";
 

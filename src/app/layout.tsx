@@ -11,7 +11,7 @@ import {
   Flex,
   Heading,
 } from "@chakra-ui/react";
-import Sidebar from "./components/Sidebar";
+import Sidebar from "@/components/Sidebar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,7 +31,6 @@ export default function RootLayout({
         <meta charSet="utf-8" />
         <meta name="description" content={metadata.description || ""} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>{metadata.title || ""}</title>
       </header>
       <body className={inter.className}>
         <ChakraProvider>
