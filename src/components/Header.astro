@@ -1,0 +1,27 @@
+---
+import Login from "./LoginButton.astro";
+---
+
+<astro>
+  <header class="grid grid-cols-12 gap-4 p-4 text-white">
+    <!-- Company Logo -->
+    <div class="col-span-3">
+      <img src="logo.png" alt="Company Logo" />
+    </div>
+
+    <!-- Header Links -->
+    <nav class="col-span-8 flex justify-end items-center">
+      <ul class="flex space-x-4">
+        <!-- Replace with your header links based on passed object config -->
+        <li><a href="/">Home</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <!-- Login Component -->
+    <div class="col-span-1 flex justify-end">
+      <!-- Replace with your login component -->
+      <Login />
+    </div>
+  </header>
+</astro>
