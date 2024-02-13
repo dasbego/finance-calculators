@@ -1,12 +1,21 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+
+const { cookies, redirect } = Astro;
+
+const accessToken = cookies.get("sb_access_token");
+const refreshToken = cookies.get("sb-refresh-token");
+
+if (accessToken && refreshToken) {
+  redirect("/dashboard");
+}
 ---
 
 <Layout>
   <div class="min-h-screen flex items-center justify-center">
     <div class="max-w-md w-full space-y-8 p-8 bg-blue-200 rounded-lg shadow-md">
       <h2 class="text-2xl font-bold text-center text-blue-600">Login</h2>
-      <form class="space-y-4">
+      <form class="space-y-4" action="/api/auth/signin" method="post">
         <div>
           <label for="email" class="block text-sm font-medium text-blue-700"
             >Email</label
@@ -39,15 +48,30 @@ import Layout from "@/layouts/Layout.astro";
             Sign in
           </button>
         </div>
+        <div class="text-sm text-center">
+          <a
+            href="/forgot-password"
+            class="font-medium text-blue-600 hover:text-blue-500"
+          >
+            Forgot your password?
+          </a>
+        </div>
       </form>
-      <div class="text-sm text-center">
-        <a
-          href="/forgot-password"
-          class="font-medium text-blue-600 hover:text-blue-500"
-        >
-          Forgot your password?
-        </a>
+      <div class="flex items-center justify-center">
+        <div class="border-t border-gray-400 mt-4 w-full"></div>
+        <div class="text-gray-500 mx-4">or</div>
+        <div class="border-t border-gray-400 mt-4 w-full"></div>
       </div>
+      <form action="/api/auth/signin" method="post">
+        <button
+          class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+          value="google"
+          name="provider"
+          type="submit"
+        >
+          Login with Google
+        </button>
+      </form>
     </div>
   </div>
 </Layout>

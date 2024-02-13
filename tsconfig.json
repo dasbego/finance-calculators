@@ -7,6 +7,7 @@
     "paths": {
       "@components/*": ["components/*"],
       "@utils/*": ["utils/*"],
+      "@lib/*": ["lib/*"],
       "@/layouts/*": ["layouts/*"],
       "@pages/*": ["pages/*"]
     }
