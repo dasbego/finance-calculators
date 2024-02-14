@@ -11,6 +11,7 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
   const validProviders = ["google"];
 
   if (provider && validProviders.includes(provider)) {
+    // authenticacion con terceros
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: provider as Provider,
       options: {
@@ -23,19 +24,23 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
     return redirect(data.url);
   }
 
+  // Manejo de error
   if (!email || !password) {
     return new Response("Email and password are required", { status: 400 });
   }
 
+  // autentication con email y pasword
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
 
+  // Manejo de error
   if (error) {
     return new Response(error.message, { status: 500 });
   }
 
+  // cookies de session
   const { access_token, refresh_token } = data.session;
   cookies.set("sb-access-token", access_token, {
     path: "/",

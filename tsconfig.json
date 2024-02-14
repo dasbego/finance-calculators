@@ -9,7 +9,9 @@
       "@utils/*": ["utils/*"],
       "@lib/*": ["lib/*"],
       "@/layouts/*": ["layouts/*"],
-      "@pages/*": ["pages/*"]
+      "@pages/*": ["pages/*"],
+      "@/types/*": ["types/*"],
+      "@/stores/*": ["stores/*"]
     }
   }
 }
