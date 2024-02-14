@@ -1,69 +1,75 @@
 ---
-const user = {
-  username: "JohnDoe",
-  email: "",
-};
+import SessionManager from "@lib/SessionManager";
+
+const { cookies, redirect } = Astro;
+
+const sessionManager = new SessionManager(cookies);
+await sessionManager.initialize();
+
+const sessionData = sessionManager.getSessionData();
+
+if (!sessionData?.access_token) {
+  return redirect("/login");
+}
+
+const email = sessionData?.user?.email;
 ---
 
-<template>
-  <div class="relative">
-    <button @click="toggleDropdown" class="flex items-center space-x-2">
-      <span class="text-gray-500">{user.username}</span>
-      <span class="text-gray-400">{user.email}</span>
-      <svg
-        class="w-4 h-4 text-gray-400"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-      >
-        <path
-          fill-rule="evenodd"
-          d="M10 12a2 2 0 100-4 2 2 0 000 4z"
-          clip-rule="evenodd"></path>
-      </svg>
-    </button>
+<button
+  id="dropdownDefaultButton"
+  data-dropdown-toggle="dropdown"
+  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+  type="button"
+  >Menu<svg
+    class="w-2.5 h-2.5 ms-3"
+    aria-hidden="true"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 10 6"
+  >
+    <path
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="m1 1 4 4 4-4"></path>
+  </svg>
+</button>
 
-    <div
-      x-show="isDropdownOpen"
-      @click.away="closeDropdown"
-      class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10"
-    >
-      <ul class="py-1">
-        <li>
-          <a
-            href="#"
-            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-          >
-            Logout
-          </a>
-        </li>
-      </ul>
-    </div>
+<!-- Dropdown menu -->
+<div
+  id="dropdown"
+  class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"
+>
+  <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
+    <div>Welcome</div>
+    <div class="font-medium truncate">{email}</div>
   </div>
-</template>
-
-<script>
-  export default {
-    data() {
-      return {
-        isDropdownOpen: false,
-        user: {
-          username: "JohnDoe",
-          email: "johndoe@example.com",
-        },
-      };
-    },
-    methods: {
-      toggleDropdown() {
-        this.isDropdownOpen = !this.isDropdownOpen;
-      },
-      closeDropdown() {
-        this.isDropdownOpen = false;
-      },
-    },
-  };
-</script>
-
-<style>
-  /* Add your custom styles here */
-</style>
+  <ul
+    class="py-2 text-sm text-gray-700 dark:text-gray-200"
+    aria-labelledby="dropdownDefaultButton"
+  >
+    <li>
+      <a
+        href="#"
+        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+        >Dashboard</a
+      >
+    </li>
+    <li>
+      <a
+        href="#"
+        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+        >Settings</a
+      >
+    </li>
+    <li>
+      <a
+        href="/api/auth/signout"
+        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+      >
+        Logout
+      </a>
+    </li>
+  </ul>
+</div>

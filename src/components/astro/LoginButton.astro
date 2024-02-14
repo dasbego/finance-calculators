@@ -1,20 +1,31 @@
 ---
 import UserWidget from "./UserWidget.astro";
+import SessionManager from "@lib/SessionManager";
 
-// Define a reactive variable to track the user's login status
-let isLoggedIn = false;
+const { cookies, redirect } = Astro;
+
+const sessionManager = new SessionManager(cookies);
+await sessionManager.initialize();
+
+const sessionData = sessionManager.getSessionData();
+const isLoggedIn = sessionData?.access_token !== undefined;
 ---
 
 <>
-  <a
-    id="login-button"
-    type="button"
-    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded size-lg"
-    href="/login"
-  >
-    {isLoggedIn ? "Logout" : "Login"}
-  </a>
-  <UserWidget />
+  {
+    isLoggedIn ? (
+      <UserWidget />
+    ) : (
+      <a
+        id="login-button"
+        type="button"
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded size-lg"
+        href="/login"
+      >
+        Login
+      </a>
+    )
+  }
 </>
 
 <script>
